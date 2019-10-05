@@ -3,7 +3,7 @@ import sys
 from bottle import request, route, run, template, static_file
 import mistune
 
-def get_GLOBAL_NOTES_PATH():
+def get_global_notes_path():
     try:
         if os.path.exists(sys.argv[1]):
             GLOBAL_NOTES_PATH = sys.argv[1]
@@ -20,7 +20,7 @@ def get_assets_path():
     return joined 
 
 ASSETS_PATH = get_assets_path()
-GLOBAL_NOTES_PATH = get_GLOBAL_NOTES_PATH()
+GLOBAL_NOTES_PATH = get_global_notes_path()
 
 def get_md_files():
     p = os.listdir(GLOBAL_NOTES_PATH)
@@ -55,24 +55,27 @@ class PageContents:
         self.contents = contents
 
 def create_routes():
+    # TODO find better place for this var
+    main_template = "{}/views/main.tpl".format(ASSETS_PATH)
+
     @route('/')
     @route('/home')
-    def home():
-        pretty_md_files = get_pretty_md_files()
+    @route('/index')
+    def index():
         check_home_address()
-        return template('{}/views/temp.tpl'.format(ASSETS_PATH), info="", md=pretty_md_files)
+        pretty_md_files = get_pretty_md_files()
+        return template(main_template, info="", md=pretty_md_files)
 
     @route('/<note>')
     def r(note):
+        check_home_address()
         pretty_md_files = get_pretty_md_files()
-        if request.remote_addr != '127.0.0.1':
-            sys.exit()
-        f = '{}{}.md'.format(GLOBAL_NOTES_PATH, note) 
-        print(f)
-        with open(f, 'r') as f1:
-            buf = f1.read()
-        m = mistune.markdown(buf)
-        return template('{}/views/temp.tpl'.format(ASSETS_PATH), info=m, md=pretty_md_files)
+        markdown_note_path = '{}{}.md'.format(GLOBAL_NOTES_PATH, note) 
+        print(markdown_note_path)
+        with open(markdown_note_path, 'r') as markdown_note:
+            buf = markdown_note.read()
+        rendered_markdown_note = mistune.markdown(buf)
+        return template(main_template, info=rendered_markdown_note, md=pretty_md_files)
 
     @route('/static/<filename>')
     def server_static(filename):
