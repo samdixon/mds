@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "md-genie"
+version = "0.0.1"
+description = "Simple Markdown Server. Enumerates lower level directories"
+authors = ["samdixon <sdixon@posteo.net>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.5"
+bottle = "^0.12.18"
+
+[tool.poetry.dev-dependencies]
+neovim = "^0.3.1"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
