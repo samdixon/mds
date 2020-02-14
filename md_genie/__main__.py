@@ -1,10 +1,11 @@
-from md_genie import cli
-from md_genie import server
+import cli
+import config
+import server
 
 def main():
     args = cli.args
-    print(args)
-    server.start_server()
+    c = config.Config(args)
+    server.start_server(c)
 
 if __name__ == "__main__":
     main()
