@@ -7,6 +7,17 @@ python-versions = "*"
 version = "0.12.18"
 
 [[package]]
+category = "main"
+description = "The fastest markdown parser in pure Python"
+name = "mistune"
+optional = false
+python-versions = "*"
+version = "0.8.4"
+
+[metadata]
+content-hash = "470a930712c95544cdb45ac026dbb5c43e7a2c0961f9b15326714426d3547d9e"
+python-versions = "^3.6"
+=======
 category = "dev"
 description = "Lightweight in-process concurrent programming"
 name = "greenlet"
@@ -53,11 +64,16 @@ test = ["pytest (>=3.4.0)"]
 content-hash = "7236cf58435a42da8de377b0f7d3668fd0b30fd21d1b1d3b902b12649641d066"
 python-versions = "^3.5"
 
+
 [metadata.files]
 bottle = [
     {file = "bottle-0.12.18-py3-none-any.whl", hash = "sha256:43157254e88f32c6be16f8d9eb1f1d1472396a4e174ebd2bf62544854ecf37e7"},
     {file = "bottle-0.12.18.tar.gz", hash = "sha256:0819b74b145a7def225c0e83b16a4d5711fde751cd92bae467a69efce720f69e"},
 ]
+mistune = [
+    {file = "mistune-0.8.4-py2.py3-none-any.whl", hash = "sha256:88a1051873018da288eee8538d476dffe1262495144b33ecb586c4ab266bb8d4"},
+    {file = "mistune-0.8.4.tar.gz", hash = "sha256:59a3429db53c50b5c6bcc8a07f8848cb00d7dc8bdb431a4ab41920d201d4756e"},
+=======
 greenlet = [
     {file = "greenlet-0.4.15-cp27-cp27m-manylinux1_x86_64.whl", hash = "sha256:99a26afdb82ea83a265137a398f570402aa1f2b5dfb4ac3300c026931817b163"},
     {file = "greenlet-0.4.15-cp27-cp27m-win32.whl", hash = "sha256:beeabe25c3b704f7d56b573f7d2ff88fc99f0138e43480cecdfcaa3b87fe4f87"},
