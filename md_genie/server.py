@@ -44,12 +44,13 @@ class MarkdownGeniePath:
 def create_routes(assets_path, notepath, markdown_files):
     # TODO find better place for this var
     main_template = "{}/views/main.tpl".format(assets_path)
+    content_template = f"{assets_path}/views/content.tpl"
 
     @route('/')
     @route('/home')
     @route('/index')
     def index():
-        return template(main_template, info="", md=markdown_files)
+        return template(main_template, info="", md=markdown_files, ct=content_template)
 
     @route('/<note>')
     def r(note):
@@ -62,7 +63,7 @@ def create_routes(assets_path, notepath, markdown_files):
         with open(markdown_note_path, 'r') as markdown_note:
             buf = markdown_note.read()
         rendered_markdown_note = mistune.markdown(buf)
-        return template(main_template, info=rendered_markdown_note, md=markdown_files)
+        return template(main_template, info=rendered_markdown_note, md=markdown_files, ct=content_template)
 
     @route('/static/<filename>')
     def server_static(filename):

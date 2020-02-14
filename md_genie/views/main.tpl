@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="./static/sam.css">
 </head>
 <body>
-    % include('/home/sdixon/code/md-genie/md_genie/views/content.tpl')
+    % include(ct)
     <script src="./static/search.js"></script>
 </body>
 </html>
