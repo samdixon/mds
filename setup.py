@@ -13,18 +13,18 @@ from setuptools import find_packages, setup, Command
 
 # Package meta-data.
 NAME = "md_genie"
-DESCRIPTION = "Simple utility to manage symlinks"
+DESCRIPTION = "Markdown File Browser"
 URL = "https://github.com/samdixon/md-genie"
-EMAIL = "dixon.sam@icloud.com"
+EMAIL = "sdixon@posteo.net"
 AUTHOR = "Samuel Dixon"
 REQUIRES_PYTHON = ">=3.5.0"
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 # What packages are required for this module to be executed?
 REQUIRED = ["bottle", "mistune"]
 
 # What packages are optional?
-EXTRAS = {"dev": ["pytest"]}
+EXTRAS = {"dev": ["pytest", "neovim"]}
 
 # The rest you shouldn't have to touch too much :)
 # ------------------------------------------------
