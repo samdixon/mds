@@ -12,12 +12,12 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = "md_genie"
-DESCRIPTION = "Markdown File Browser"
-URL = "https://github.com/samdixon/md-genie"
+NAME = "mds"
+DESCRIPTION = "Markdown Server"
+URL = "https://github.com/samdixon/mds"
 EMAIL = "sdixon@posteo.net"
 AUTHOR = "Samuel Dixon"
-REQUIRES_PYTHON = ">=3.5.0"
+REQUIRES_PYTHON = ">=3.6.0"
 VERSION = "0.0.2"
 
 # What packages are required for this module to be executed?
@@ -104,7 +104,7 @@ setup(
     # py_modules=['mypackage'],
     entry_points="""
         [console_scripts]
-        mg = md_genie.__main__:main
+        mds = mds.__main__:main
     """,
     install_requires=REQUIRED,
     extras_require=EXTRAS,
