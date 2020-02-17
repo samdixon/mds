@@ -1,6 +1,6 @@
-import cli
-import config
-import server
+from . import cli
+from . import config
+from . import server
 
 def main():
     args = cli.args
