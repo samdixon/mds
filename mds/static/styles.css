@@ -8,9 +8,24 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
+    margin: 0;
+    padding: 0;
 }
 
 nav {
+  width: 100%;
+  height: auto;
+  background-color: black;
+  color: white;
+}
+
+nav h2 {
+  margin: 0;
+  padding:10px;
+  display: block;
+}
+
+.items {
     margin: 0;
     padding-left: 0;
     padding-right: 0;
@@ -20,36 +35,36 @@ nav {
     height: 100%;
     overflow: auto;
 }
-nav ul {
+.items ul{
     list-style: none;
     padding-left: 5px;
     width: auto;
     scrollbar-width: none;
 }
 
-nav ul li {
+.items ul li {
     display: block;
 }
 
-nav ul li a:link {
+.items ul li a:link {
     color: black;
     text-decoration: none;
 }
 
-nav ul li a:visited {
+.items ul li a:visited {
     color: black;
     text-decoration: none;
 }
 
-nav ul li a:hover{
+.items ul li a:hover{
     color:grey;
 }
 
-nav ul li a:active {
+.items ul li a:active {
     color:grey;
 }
 
-nav #search_input {
+.items #search_input {
 }
 
 @font-face {
