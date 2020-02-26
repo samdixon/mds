@@ -68,6 +68,9 @@ def create_routes(assets_path, notepath, markdown_files):
     mde_template = f"{assets_path}/views/mde.tpl"
     mde_test = f"{assets_path}/views/mde-test.tpl"
     home_template = f"{assets_path}/views/home.tpl"
+    mdbar_template = f"{assets_path}/views/mdbar.tpl"
+    homebar_template = f"{assets_path}/views/homebar.tpl"
+    mdebar_template = f"{assets_path}/views/mdebar.tpl"
 
     @route('/')
     @route('/home')
@@ -76,10 +79,11 @@ def create_routes(assets_path, notepath, markdown_files):
         return template(
                 main_template, 
                 md=markdown_files, 
-                f="",
                 nav=nav_template,
                 searchbar=searchbar_template,
-                content=home_template)
+                content=home_template,
+                bar=homebar_template,
+                title="Home")
 
     @route('/<note>')
     def r(note):
@@ -92,7 +96,9 @@ def create_routes(assets_path, notepath, markdown_files):
                 md=markdown_files,
                 nav=nav_template,
                 searchbar=searchbar_template,
-                content=content_template)
+                content=content_template,
+                bar=mdbar_template,
+                title=markdown_file.pretty_filename)
 
     @route('/static/<filename>')
     @route('/mde/static/<filename>')
@@ -109,10 +115,13 @@ def create_routes(assets_path, notepath, markdown_files):
         return template(
                 main_template, 
                 info=read_markdown_note, 
+                f=markdown_file,
                 md=markdown_files,
                 nav=nav_template,
                 searchbar=searchbar_template,
-                content=mde_test)
+                content=mde_test,
+                bar=mdebar_template,
+                title=f"Editing {markdown_file.pretty_filename}")
         
 
 def start_server(c):

@@ -18,7 +18,7 @@ URL = "https://github.com/samdixon/mds"
 EMAIL = "sdixon@posteo.net"
 AUTHOR = "Samuel Dixon"
 REQUIRES_PYTHON = ">=3.6.0"
-VERSION = "0.0.3"
+VERSION = "0.0.5"
 
 # What packages are required for this module to be executed?
 REQUIRED = ["bottle", "mistune"]
@@ -107,8 +107,8 @@ setup(
         mds = mds.__main__:main
     """,
     install_requires=REQUIRED,
+    include_package_data = True,
     extras_require=EXTRAS,
-    package_data = {"": ["mds/static/*", "mds/views/*"]},
     license="MIT",
     classifiers=[
         # Trove classifiers

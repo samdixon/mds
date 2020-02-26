@@ -1,70 +1,80 @@
-html {
-    height: 100vh;
-    min-height: 100vh;
-}
 body {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 0;
 }
 
 nav {
   width: 100%;
   height: auto;
+  margin: 0;
+  padding: 0;
   background-color: black;
   color: white;
 }
 
 nav h2 {
+  display: inline-block;
+  padding: 5px;
   margin: 0;
-  padding:10px;
-  display: block;
 }
 
-.items {
-    margin: 0;
-    padding-left: 0;
-    padding-right: 0;
-    display: block;
-    float: left;
-    width: 30%;
-    height: 100%;
-    overflow: auto;
-}
-.items ul{
-    list-style: none;
-    padding-left: 5px;
-    width: auto;
-    scrollbar-width: none;
+nav a {
+  text-decoration: none;
+  color: white;
+  padding: 0;
+  margin: 0;
 }
 
-.items ul li {
-    display: block;
+nav #search_input_box {
+  display: inline-block;
+  height: auto;
+  padding: 5px;
+  margin: 0;
+  float: right;
 }
 
-.items ul li a:link {
-    color: black;
-    text-decoration: none;
+section {
+  padding:0;
+  margin:10px 0 0 0;
 }
 
-.items ul li a:visited {
-    color: black;
-    text-decoration: none;
+.home-item-container {
+  padding: 5px;
+  margin: 0;
 }
 
-.items ul li a:hover{
-    color:grey;
+.home-item-container ul {
+  padding: 0;
+  margin: 0;
+}
+.home-item-container li {
+  list-style: none;
+  width: 100%;
+  height: auto;
+  padding: 5px 0;
+  border-bottom: 1px solid lightblue;
 }
 
-.items ul li a:active {
-    color:grey;
+.home-item-container a {
+  text-decoration: none ;
 }
 
-.items #search_input {
+#midbar {
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+  height: auto;
+}
+
+.buttons {
+  margin-top: 10px;
+  padding:5px 0;
 }
 
 @font-face {
@@ -75,6 +85,8 @@ nav h2 {
 .markdown-body {
     height: 100%;
     overflow-y: auto;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 .markdown-body .octicon {
   display: inline-block;
