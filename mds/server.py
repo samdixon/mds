@@ -1,104 +1,57 @@
-import os
-from pathlib import Path
+from sys import stdout
+import subprocess
 import sys
-from bottle import request, route, run, template, static_file
-import mistune
+from bottle import request, response, route, post, run, template, static_file
+from .markdown import get_markdown_files, search_markdown_files
 
-def get_markdown_files(notepath: str) -> list:
-    """takes notepath variable and generates a list of markdown files"""
-    markdown_files = [] 
-    for path in Path(notepath).rglob("*.md"):
-        markdown_files.append(MarkdownNote(notepath, path.as_posix(), path.name))
-
-    return markdown_files
-
-def search_markdown_files(note: str, markdown_files: list):
-    for markdown_file in markdown_files:
-        if markdown_file.pretty_filename == note:
-            return markdown_file
-
-class MarkdownNote:
+class Templates:
     """
-    Simple data class to more easily work with absolute path names and filenames
+    Very simple data class to perform a small path manipulation on the templates
+    allows easy access of templates in the route creation process and allows decoupling
+    still not sure this is the best implementation of this but trying it for now
     """
-    def __init__(self, notepath, absolute_path, filename):
-        self.notepath = notepath
-        self.absolute_path = absolute_path
-        self.filename = filename
-        self.pretty_filename = self._get_pretty_name()
-        self.url_path = self._get_url_path()
-        self.rendered = ""
+    def __init__(self, assets_path):
+        self.assets_path = assets_path
 
-    def __str__(self):
-        return f"{self.absolute_path}: {self.filename}"
+        self.main_layout = f"{self.assets_path}/views/main_layout.tpl"
+        self.nav = f"{self.assets_path}/views/nav.tpl"
+        self.home_content = f"{self.assets_path}/views/home_content.tpl"
+        self.home_bar = f"{self.assets_path}/views/home_bar.tpl"
+        # self.editor = f"{self.assets_path}/views/editor.tpl"
+        self.markdown_content = f"{self.assets_path}/views/markdown_content.tpl"
+        self.markdown_content_bar = f"{self.assets_path}/views/markdown_content_bar.tpl"
+        self.markdown_editor = f"{self.assets_path}/views/markdown_editor.tpl"
+        self.markdown_editor_bar = f"{self.assets_path}/views/markdown_editor_bar.tpl"
 
-    def _get_pretty_name(self):
-        ## Need to make sure this doesn't pop a file without an md tag
-        temp = self.filename.split(".")
-        return temp[0]
-
-    def _get_url_path(self):
-        s = self.absolute_path.split("/")
-        url_path_arr = []
-        for i in s:
-            if i not in self.notepath:
-                url_path_arr.append(i)
-
-        url_path_arr.pop()
-        url_path_arr.append(self.pretty_filename)
-        return "/".join(url_path_arr)
-
-    def read(self):
-        with open(self.absolute_path, 'r') as markdown_note:
-            buf = markdown_note.read()
-        return buf
-
-
-    def render(self):
-        buf = self.read()
-        self.rendered = mistune.markdown(buf)
-        return self.rendered
-
-def create_routes(assets_path, notepath, markdown_files):
-    # TODO find better way to do this
-    main_template = f"{assets_path}/views/main.tpl"
-    nav_template = f"{assets_path}/views/nav.tpl"
-    searchbar_template = f"{assets_path}/views/searchbar.tpl"
-    content_template = f"{assets_path}/views/content.tpl"
-    mde_template = f"{assets_path}/views/mde.tpl"
-    mde_test = f"{assets_path}/views/mde-test.tpl"
-    home_template = f"{assets_path}/views/home.tpl"
-    mdbar_template = f"{assets_path}/views/mdbar.tpl"
-    homebar_template = f"{assets_path}/views/homebar.tpl"
-    mdebar_template = f"{assets_path}/views/mdebar.tpl"
+def create_routes(assets_path, markdown_files, templates):
 
     @route('/')
-    @route('/home')
-    @route('/index')
     def index():
         return template(
-                main_template, 
+                templates.main_layout,
                 md=markdown_files, 
-                nav=nav_template,
-                searchbar=searchbar_template,
-                content=home_template,
-                bar=homebar_template,
+                nav=templates.nav,
+                content=templates.home_content,
+                bar=templates.home_bar,
                 title="Home")
 
     @route('/<note>')
     def r(note):
-        markdown_file = search_markdown_files(note, markdown_files)
-        rendered_markdown_note = markdown_file.render()
-        return template(
-                main_template, 
-                rendered_markdown=rendered_markdown_note, 
-                f=markdown_file, 
-                md=markdown_files,
-                nav=nav_template,
-                searchbar=searchbar_template,
-                content=content_template,
-                bar=mdbar_template,
-                title=markdown_file.pretty_filename)
+        try:
+            markdown_file = search_markdown_files(note, markdown_files)
+            rendered_markdown_note = markdown_file.render()
+            return template(
+                    templates.main_layout,
+                    rendered_markdown=rendered_markdown_note,
+                    f=markdown_file,
+                    md=markdown_files,
+                    nav=templates.nav,
+                    content=templates.markdown_content,
+                    bar=templates.markdown_content_bar,
+                    title=markdown_file.pretty_filename)
+        except IndexError as e:
+            print(e, file=sys.stderr)
+            return "404: File Not Found"
 
     @route('/static/<filename>')
     @route('/mde/static/<filename>')
@@ -113,19 +66,32 @@ def create_routes(assets_path, notepath, markdown_files):
         markdown_file = search_markdown_files(note, markdown_files)
         read_markdown_note = markdown_file.read()
         return template(
-                main_template, 
+                templates.main_layout,
                 info=read_markdown_note, 
                 f=markdown_file,
                 md=markdown_files,
-                nav=nav_template,
-                searchbar=searchbar_template,
-                content=mde_test,
-                bar=mdebar_template,
+                nav=templates.nav,
+                content=templates.markdown_editor,
+                bar=templates.markdown_editor_bar,
                 title=f"Editing {markdown_file.pretty_filename}")
+
+    @post("/mde/save")
+    def save_note():
+        data = request.json
+        absolute_path = data['absolute_path']
+        updated_file_content = data['saved_value']
+        with open(absolute_path, 'w') as f:
+            f.writelines(updated_file_content)
+
         
 
 def start_server(c):
     markdown_files = get_markdown_files(c.notepath)
-    create_routes(c.assets_path, c.notepath, markdown_files)
-    print("Starting Server")
-    run(host=c.host, port=3000, reloader=True)
+    templates = Templates(c.assets_path)
+    create_routes(c.assets_path, markdown_files, templates)
+    if c.daemonize:
+        subprocess.Popen(["mds", "/home/sdixon/Dropbox/notes"])
+    else:
+        run(host=c.host, port=c.port, reloader=True)
+
+

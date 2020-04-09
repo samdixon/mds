@@ -12,6 +12,7 @@
 % include(bar)
 % include(content)
 </div>
-<script src="./static/search.js"></script>
+<script src="/static/search.js"></script>
+<script src="/static/utils.js"></script>
 </body>
 </html>
