@@ -1,4 +1,4 @@
-from sys import stdout
+import os
 import subprocess
 import sys
 from bottle import request, response, route, post, run, template, static_file
@@ -23,10 +23,15 @@ class Templates:
         self.markdown_editor = f"{self.assets_path}/views/markdown_editor.tpl"
         self.markdown_editor_bar = f"{self.assets_path}/views/markdown_editor_bar.tpl"
 
-def create_routes(assets_path, markdown_files, templates):
+def refresh_markdown_files(notepath):
+    return get_markdown_files(notepath)
+
+
+def create_routes(assets_path, notepath, templates):
 
     @route('/')
     def index():
+        markdown_files = refresh_markdown_files(notepath)
         return template(
                 templates.main_layout,
                 md=markdown_files, 
@@ -38,6 +43,7 @@ def create_routes(assets_path, markdown_files, templates):
     @route('/<note>')
     def r(note):
         try:
+            markdown_files = refresh_markdown_files(notepath)
             markdown_file = search_markdown_files(note, markdown_files)
             rendered_markdown_note = markdown_file.render()
             return template(
@@ -63,6 +69,7 @@ def create_routes(assets_path, markdown_files, templates):
 
     @route("/mde/<note>")
     def mde_note_edit(note):
+        markdown_files = refresh_markdown_files(notepath)
         markdown_file = search_markdown_files(note, markdown_files)
         read_markdown_note = markdown_file.read()
         return template(
@@ -75,23 +82,54 @@ def create_routes(assets_path, markdown_files, templates):
                 bar=templates.markdown_editor_bar,
                 title=f"Editing {markdown_file.pretty_filename}")
 
+    @post("/mde/new")
+    def new_note():
+        data = request.json
+        new_note_name = data['note_name']
+        print(new_note_name)
+        filepath = notepath + "/" + new_note_name
+        print(filepath)
+        with open(filepath, 'w') as f:
+            f.write("")
+        return {}
+
     @post("/mde/save")
     def save_note():
-        data = request.json
-        absolute_path = data['absolute_path']
-        updated_file_content = data['saved_value']
-        with open(absolute_path, 'w') as f:
-            f.writelines(updated_file_content)
+        try:
+            data = request.json
+            absolute_path = data['absolute_path']
+            updated_file_content = data['saved_value']
+            with open(absolute_path, 'w') as f:
+                f.writelines(updated_file_content)
+            return {"success": True}
+        except Exception as e:
+            print(e)
+            return {"success": False}
 
-        
+    @post("/mde/delete")
+    def delete_note():
+        try:
+            ### todo 
+            ### refresh file contents for main page so the file list is updated
+            data = request.json
+            absolute_path = data['absolute_path']
+            os.remove(absolute_path)
+            return {"success": True}
+        except Exception as e:
+            print(e)
+            return {"success": False}
+
+    @post("/tester")
+    def tester():
+        response.content_type = "application/json"
+        return response
 
 def start_server(c):
-    markdown_files = get_markdown_files(c.notepath)
     templates = Templates(c.assets_path)
-    create_routes(c.assets_path, markdown_files, templates)
+    create_routes(c.assets_path, c.notepath, templates)
     if c.daemonize:
         subprocess.Popen(["mds", "/home/sdixon/Dropbox/notes"])
     else:
-        run(host=c.host, port=c.port, reloader=True)
+        run(host=c.host, port=c.port, reloader=c.debug)
 
 

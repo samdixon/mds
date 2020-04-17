@@ -1,4 +1,4 @@
 <div id="midbar">
     <div class="buttons">
-    <button>New</button>
+    <button onclick="newNote()">New</button>
 </div>
