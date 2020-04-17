@@ -1,20 +1,19 @@
 <div class="markdown-body">
 	<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
     <script>
-    localStorage.removeItem('smde_demo2');
+    localStorage.removeItem('smde_editor');
     </script>
-	<textarea id="demo2">
+	<textarea id="editor">
 		{{!info}}
 	</textarea>
 	<script>
 		var s = new SimpleMDE({
-			element: document.getElementById("demo2"),
+			element: document.getElementById("editor"),
 			spellChecker: false,
 			autosave: {
 				enabled: true,
-				unique_id: "demo2",
+				unique_id: "editor",
 			},
 		});
-		s.clearAutosaveValue();
 	</script>
 </div>

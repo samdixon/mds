@@ -4,6 +4,9 @@ class Config:
     def __init__(self, args):
         self.args = args,
         self.host = args.host
+        self.port = args.port
+        self.daemonize = args.daemonize
+        self.debug = args.debug
         self.notepath = args.notepath
         self.assets_path = self._get_assets_path()
 

@@ -1,6 +1,6 @@
-from . import cli
-from . import config
-from . import server
+from mds import cli
+from mds import config
+from mds import server
 
 def main():
     args = cli.args
